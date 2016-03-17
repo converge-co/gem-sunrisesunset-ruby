@@ -49,6 +49,16 @@ class SolarEventCalculator
     trueLong.round(4)
   end
 
+  def put_in_range(number, lower, upper, adjuster)
+    if number > upper then
+      number -= adjuster
+    elsif number < lower then
+      number += adjuster
+    else
+      number
+    end
+  end
+
   def compute_right_ascension(sunTrueLong)
     tanL = Math.tan(sunTrueLong * @to_rad) #BigDecimal.new(Math.tan(degrees_to_radians(sunTrueLong).to_f).to_s)
     ra = Math.atan(0.91764 * tanL) * @to_deg#radians_to_degrees(BigDecimal.new(Math.atan(BigDecimal.new("0.91764") * tanL).to_s))
@@ -110,6 +120,14 @@ class SolarEventCalculator
     utcTime = time - longHour
     utcTime = put_in_range(utcTime, 0, 24, 24)
     utcTime.round(4)
+  end
+
+  def pad_minutes(minutes)
+    if(minutes < 10)
+      "0" + minutes.to_s
+    else
+      minutes
+    end
   end
 
   def compute_utc_solar_event(zenith, isSunrise)
@@ -241,23 +259,9 @@ class SolarEventCalculator
     put_in_timezone(compute_utc_solar_event(108, false), timezone)
   end   
 
-  def pad_minutes(minutes)
-    if(minutes < 10)
-      "0" + minutes.to_s
-    else
-      minutes
-    end
-  end
+  
 
-  def put_in_range(number, lower, upper, adjuster)
-    if number > upper then
-      number -= adjuster
-    elsif number < lower then
-      number += adjuster
-    else
-      number
-    end
-  end
+  
 
   def degrees_to_radians(degrees)
     # pi = BigDecimal(Math::PI.to_s)

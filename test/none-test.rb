@@ -1,27 +1,42 @@
 require '../lib/solareventcalculator'
 
 require 'date'
-date = Date.parse('2008-11-01') #01 November 2008
-lat  = 39.9537
-lng  = -75.7850
+date = Date.today + 1
+lat  = 41.95
+lng  = -88.743
+timezone = "America/Chicago"
+zenith = 90.833
 
 calc = SolarEventCalculator.new(date, lat, lng)
-calc.compute_sun_true_longitude(298.7585)
-calc.compute_right_ascension(219.6960)
-calc.put_ra_in_correct_quadrant(219.6960)
-calc.compute_sine_sun_declination(219.6960)
-p calc.compute_cosine_sun_declination(-0.2541)
-p calc.compute_cosine_sun_declination(BigDecimal.new("-0.2541"))
-calc.compute_cosine_sun_local_hour(219.6960, 96)
-calc.compute_local_hour_angle(0.0791, true)
-calc.compute_local_mean_time(219.6960, -5.0523, 306.4605, 18.3025)
+p lngHour = calc.compute_lnghour.to_f
+calc.get_utc_offset(timezone)
 
-calc.compute_utc_astronomical_sunrise
-calc.compute_utc_nautical_sunrise
-calc.compute_utc_civil_sunrise
-calc.compute_utc_official_sunrise
-
-calc.compute_astronomical_sunrise('America/New_York')
-calc.compute_nautical_sunrise('America/New_York')
-calc.compute_civil_sunrise('America/New_York')
-calc.compute_official_sunrise('America/New_York')
+puts
+isSunrise = true
+p longHour = calc.compute_longitude_hour(isSunrise).to_f
+p meanAnomaly = calc.compute_sun_mean_anomaly(longHour).to_f 
+p sunTrueLong = calc.compute_sun_true_longitude(meanAnomaly)
+p calc.compute_right_ascension(sunTrueLong)
+p calc.put_ra_in_correct_quadrant(sunTrueLong)
+p sinSunDeclination = calc.compute_sine_sun_declination(sunTrueLong)
+p calc.compute_cosine_sun_declination(sinSunDeclination)
+p cosSunLocalHour = calc.compute_cosine_sun_local_hour(sunTrueLong, zenith)
+p sunLocalHour = calc.compute_local_hour_angle(cosSunLocalHour, isSunrise)
+p calc.compute_local_mean_time(sunTrueLong, longHour, lngHour,  sunLocalHour)
+p rise = calc.compute_utc_solar_event(zenith, isSunrise)
+p calc.put_in_timezone(rise, timezone)
+puts
+isSunrise = false
+p longHour = calc.compute_longitude_hour(isSunrise).to_f
+p meanAnomaly = calc.compute_sun_mean_anomaly(longHour).to_f 
+p sunTrueLong = calc.compute_sun_true_longitude(meanAnomaly)
+p calc.compute_right_ascension(sunTrueLong)
+p calc.put_ra_in_correct_quadrant(sunTrueLong)
+p sinSunDeclination = calc.compute_sine_sun_declination(sunTrueLong)
+p calc.compute_cosine_sun_declination(sinSunDeclination)
+p calc.compute_cosine_sun_local_hour(sunTrueLong, zenith)
+p cosSunLocalHour = calc.compute_cosine_sun_local_hour(sunTrueLong, zenith)
+p sunLocalHour = calc.compute_local_hour_angle(cosSunLocalHour, isSunrise)
+p calc.compute_local_mean_time(sunTrueLong, longHour, lngHour,  sunLocalHour)
+p set = calc.compute_utc_solar_event(zenith, isSunrise)
+p calc.put_in_timezone(set, timezone)
