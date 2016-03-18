@@ -14,8 +14,8 @@ describe SolarEventCalculator, "Test the sunset algorithm" do
     latString = nameParts[0].split('-')[0].sub!('_', '.')
     longString = nameParts[0].split('-')[1].sub!('_', '.')
 
-    p latitude = BigDecimal.new(latString.chop)
-    p longitude = BigDecimal.new(longString.chop)
+    latitude = BigDecimal.new(latString.chop)
+    longitude = BigDecimal.new(longString.chop)
     if latString.end_with?('S')
       latitude = BigDecimal.new("0") - latitude
     end
@@ -47,7 +47,7 @@ describe SolarEventCalculator, "Test the sunset algorithm" do
       #assert_equal(calc.compute_civil_sunrise(timeZone), expectedCivilRise) #, "Civil Rise")
 
       time = parts[3].split(':')
-      p expectedOfficialRise = put_in_timezone(date, time[0], time[1], timeZone)
+      expectedOfficialRise = put_in_timezone(date, time[0], time[1], timeZone)
       assert_equal(calc.compute_official_sunrise(timeZone), expectedOfficialRise)#, "Official Rise")
 
       time = parts[4].split(':')
