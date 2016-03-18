@@ -52,7 +52,7 @@ describe SolarEventCalculator, "Test the sunset algorithm" do
 
       time = parts[4].split(':')
       expectedOfficialSet = put_in_timezone(date, time[0], time[1], timeZone)
-      #calc.compute_official_sunset(timeZone).should be_close_to(expectedOfficialSet, "Official Set")
+      assert_equal(calc.compute_official_sunset(timeZone), expectedOfficialSet)#, "Official Set")
 
       time = parts[5].split(':')
       expectedCivilSet = put_in_timezone(date, time[0], time[1], timeZone)
